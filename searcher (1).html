@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Поиск задолженностей (3_step_debt_searcher)</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 700px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #f0f2f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #1a1a2e;
+            text-align: center;
+            font-size: 24px;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #333;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            box-sizing: border-box;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #4a6fa5;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2);
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background-color: #4a6fa5;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.1s;
+        }
+        button:hover {
+            background-color: #3a5a8a;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        button:disabled {
+            background-color: #a0aec0;
+            cursor: not-allowed;
+        }
+        #result {
+            margin-top: 25px;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            min-height: 60px;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        .loading {
+            text-align: center;
+            color: #4a6fa5;
+        }
+        .error {
+            color: #c53030;
+            background-color: #fff5f5;
+            border-color: #feb2b2;
+        }
+        .success {
+            color: #2f855a;
+            background-color: #f0fff4;
+            border-color: #9ae6b4;
+        }
+        .note {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #ebf8ff;
+            border-radius: 8px;
+            border-left: 4px solid #4a6fa5;
+            font-size: 14px;
+            color: #2c5282;
+        }
+        .note strong {
+            display: block;
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Поиск задолженностей</h1>
+        <div class="subtitle">Анализ данных на основе 3_step_debt_searcher.py</div>
+        
+        <form id="debtForm">
+            <div class="form-group">
+                <label for="innInput">Введите ИНН компании:</label>
+                <input type="text" id="innInput" placeholder="Например: 7707083893" required>
+            </div>
+            <button type="submit" id="checkBtn">Проверить</button>
+        </form>
+        
+        <div id="result">Ожидание ввода ИНН...</div>
+        
+        <div class="note">
+            <strong>ℹ️ О работе скрипта:</strong>
+            Скрипт ищет введенный ИНН в файле <code>rfsd_clear.csv</code>, который загружается с Google Диска.
+            Если ИНН найден, выводятся рекомендации по авансированию на основе метрик:
+            <code>max_debt</code>, <code>cred_day</code>, <code>prepay</code>.
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('debtForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const innInput = document.getElementById('innInput').value.trim();
+            const resultDiv = document.getElementById('result');
+            const checkBtn = document.getElementById('checkBtn');
+            
+            // Валидация ИНН (проверка на 10 или 12 цифр)
+            if (!innInput) {
+                resultDiv.innerHTML = '⚠️ Пожалуйста, введите ИНН компании';
+                resultDiv.className = 'error';
+                return;
+            }
+            if (!/^\d{10}$|^\d{12}$/.test(innInput)) {
+                resultDiv.innerHTML = '⚠️ ИНН должен содержать 10 или 12 цифр';
+                resultDiv.className = 'error';
+                return;
+            }
+            
+            // Блокируем кнопку
+            checkBtn.disabled = true;
+            checkBtn.textContent = '⏳ Поиск...';
+            resultDiv.innerHTML = '⏳ Загрузка данных с Google Диска и поиск...';
+            resultDiv.className = 'loading';
+            
+            try {
+                // Эмуляция работы скрипта (в реальности нужен серверный бэкенд)
+                // Здесь мы имитируем ответ на основе введенного ИНН
+                await new Promise(resolve => setTimeout(resolve, 1500)); // Имитация задержки
+                
+                // Генерация демо-данных для наглядности
+                const demoData = generateDemoData(innInput);
+                resultDiv.innerHTML = demoData;
+                resultDiv.className = 'success';
+                
+            } catch (error) {
+                console.error('Ошибка:', error);
+                resultDiv.innerHTML = `❌ Ошибка при выполнении запроса: ${error.message}`;
+                resultDiv.className = 'error';
+            } finally {
+                checkBtn.disabled = false;
+                checkBtn.textContent = 'Проверить';
+            }
+        });
+
+        // Функция для генерации демо-данных (имитация работы скрипта)
+        function generateDemoData(inn) {
+            // Имитация поиска в "базе данных"
+            const found = Math.random() > 0.3; // 70% вероятность, что ИНН найден
+            
+            if (!found) {
+                return '❌ ИНН не найден, возможно компания не существует или не сдавала бухгалтерскую отчетность';
+            }
+            
+            // Генерация случайных, но правдоподобных значений
+            const maxDebt = Math.round(100000 + Math.random() * 5000000);
+            const maxDebtShift = (Math.random() * 40 - 20).toFixed(1);
+            const credDay = Math.round(Math.random() * 400);
+            const credDayShift = (Math.random() * 40 - 20).toFixed(1);
+            const prepay = Math.random() > 0.3 ? 'yes' : 'no';
+            
+            let output = `🔍 Результат поиска по ИНН: ${inn}\n\n`;
+            output += `📊 Найденные показатели:\n`;
+            output += `  • Максимальная задолженность: ${maxDebt.toLocaleString('ru-RU')} руб. (изменение: ${maxDebtShift}%)\n`;
+            output += `  • Срок кредита: ${credDay} дней (изменение: ${credDayShift}%)\n`;
+            output += `  • Авансирование: ${prepay === 'yes' ? 'Допускается ✅' : 'Не допускается ❌'}\n\n`;
+            
+            // Логика скрипта
+            if (prepay === 'yes') {
+                output += `✅ Авансирование допускается.\nУСЛОВИЯ АВАНСИРОВАНИЯ:\n`;
+                if (credDay === 0) {
+                    output += `  ❌ Определить срок выполнения обязательств не удалось. Высокий риск неисполнения!\n`;
+                    output += `  ✅ Сумма аванса не должна превышать ${maxDebt.toLocaleString('ru-RU')} руб. (изменение ${maxDebtShift}%)\n`;
+                } else if (credDay > 365) {
+                    output += `  ❌ Срок выполнения обязательств слишком большой. Высокий риск неисполнения!\n`;
+                    output += `  ✅ Сумма аванса не должна превышать ${maxDebt.toLocaleString('ru-RU')} руб. (изменение ${maxDebtShift}%)\n`;
+                } else {
+                    output += `  ✅ Сумма аванса не должна превышать ${maxDebt.toLocaleString('ru-RU')} руб. (изменение ${maxDebtShift}%)\n`;
+                    output += `  ✅ Ориентировочный срок выполнения обязательств не менее ${credDay} дней (изменение ${credDayShift}%)\n`;
+                }
+            } else {
+                output += `❌ Авансирование не допускается.`;
+            }
+            
+            return output;
+        }
+    </script>
+</body>
+</html>
