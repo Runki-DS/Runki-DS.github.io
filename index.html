@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Поиск задолженностей (3_step_debt_searcher)</title>
+    <title>Брусника. Проверка кредитоспособности.</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -118,8 +118,8 @@
 </head>
 <body>
     <div class="container">
-        <h1>🔍 Поиск задолженностей</h1>
-        <div class="subtitle">Анализ данных на основе 3_step_debt_searcher.py</div>
+        <h1>🔍 Брусника. Провека кредитоспособности контрагента</h1>
+        <div class="subtitle">Анализ на основе данных бухгалтерской отчетности 2023, 2024, 2025 годов</div>
         
         <form id="debtForm">
             <div class="form-group">
@@ -133,9 +133,9 @@
         
         <div class="note">
             <strong>ℹ️ О работе скрипта:</strong>
-            Скрипт ищет введенный ИНН в файле <code>rfsd_clear.csv</code>, который загружается с Google Диска.
-            Если ИНН найден, выводятся рекомендации по авансированию на основе метрик:
-            <code>max_debt</code>, <code>cred_day</code>, <code>prepay</code>.
+            Скрипт проводит проверку кредитоспособности на основе финансовых показателей БО,
+            Определяет срок оборачиваемости кредиторской задолженности (срок исполнения обязательств).
+            Если ИНН найден, выводятся рекомендации по авансированию.
         </div>
     </div>
 
