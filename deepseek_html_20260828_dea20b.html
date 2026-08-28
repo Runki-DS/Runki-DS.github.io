@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Брусника • Оценка кредитоспособности</title>
+    <!-- Шрифты и базовый стиль, близкий к бруснике -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #f5f3f0;
+            font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #1e1e1e;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 24px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.12), 0 8px 24px -6px rgba(0, 0, 0, 0.05);
+            padding: 40px 36px;
+            transition: all 0.2s ease;
+        }
+
+        /* Шапка в духе брусники */
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            border-bottom: 1px solid #eae7e2;
+            padding-bottom: 20px;
+        }
+
+        .brand-icon {
+            background: #1e3a3a;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 20px;
+            letter-spacing: -0.5px;
+        }
+
+        .brand-text {
+            font-weight: 500;
+            font-size: 18px;
+            color: #1e3a3a;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-text span {
+            font-weight: 300;
+            color: #5e6f6f;
+        }
+
+        .tagline {
+            font-size: 14px;
+            color: #5e6f6f;
+            margin-top: 2px;
+            font-weight: 400;
+        }
+
+        /* Поиск / ввод */
+        .search-section {
+            background: #f8f6f3;
+            border-radius: 20px;
+            padding: 24px 24px 28px;
+            margin-bottom: 32px;
+        }
+
+        .search-label {
+            font-weight: 500;
+            font-size: 16px;
+            color: #1e3a3a;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .search-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .search-input {
+            flex: 2 1 200px;
+            padding: 14px 18px;
+            border-radius: 60px;
+            border: 1px solid #d9d4cd;
+            background: white;
+            font-size: 16px;
+            font-family: inherit;
+            outline: none;
+            transition: 0.2s;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+        }
+
+        .search-input:focus {
+            border-color: #1e3a3a;
+            box-shadow: 0 0 0 3px rgba(30, 58, 58, 0.08);
+        }
+
+        .search-button {
+            background: #1e3a3a;
+            color: white;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 16px;
+            font-family: inherit;
+            cursor: pointer;
+            transition: 0.15s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 8px rgba(30, 58, 58, 0.08);
+            flex: 0 0 auto;
+        }
+
+        .search-button:hover {
+            background: #143030;
+            transform: scale(1.01);
+            box-shadow: 0 8px 16px rgba(30, 58, 58, 0.12);
+        }
+
+        .search-button:active {
+            transform: scale(0.97);
+        }
+
+        .hint {
+            font-size: 13px;
+            color: #7e8c8c;
+            margin-top: 12px;
+            padding-left: 4px;
+        }
+
+        /* Карточка результата */
+        .result-card {
+            border-radius: 24px;
+            background: #faf9f7;
+            padding: 28px 24px;
+            margin-top: 8px;
+            transition: 0.2s;
+            border: 1px solid #ece8e3;
+        }
+
+        .company-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .company-name {
+            font-weight: 600;
+            font-size: 22px;
+            letter-spacing: -0.3px;
+            color: #1e2c2c;
+        }
+
+        .company-inn {
+            font-weight: 400;
+            font-size: 16px;
+            color: #5e6f6f;
+            background: #edebe7;
+            padding: 4px 14px;
+            border-radius: 40px;
+            letter-spacing: 0.2px;
+        }
+
+        .company-age {
+            font-size: 15px;
+            color: #3f5555;
+            background: #e9e5df;
+            padding: 4px 14px;
+            border-radius: 40px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 6px 18px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 14px;
+            background: #eae7e2;
+            color: #2f4646;
+            margin-top: 4px;
+        }
+
+        .status-badge.success {
+            background: #d9eee6;
+            color: #0e4b3a;
+        }
+
+        .status-badge.warning {
+            background: #fdf0e3;
+            color: #8f5f2e;
+        }
+
+        .status-badge.danger {
+            background: #fce9e9;
+            color: #a54141;
+        }
+
+        .status-badge.muted {
+            background: #eae7e2;
+            color: #5e6f6f;
+        }
+
+        .metric-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px 24px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #e6e1db;
+        }
+
+        .metric-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metric-label {
+            font-size: 13px;
+            font-weight: 400;
+            color: #637777;
+            letter-spacing: 0.2px;
+            margin-bottom: 6px;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 550;
+            color: #1e2c2c;
+            display: flex;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .metric-sub {
+            font-size: 14px;
+            font-weight: 400;
+            color: #4a6262;
+        }
+
+        .metric-sub.green {
+            color: #1f7a5a;
+        }
+        .metric-sub.red {
+            color: #b15151;
+        }
+        .metric-sub.neutral {
+            color: #7e8c8c;
+        }
+
+        .equity-line {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px dashed #ddd8d1;
+            font-size: 15px;
+            color: #1e3a3a;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .equity-label {
+            font-weight: 400;
+            color: #4a6262;
+        }
+        .equity-value {
+            font-weight: 500;
+        }
+
+        .no-data-message {
+            color: #637777;
+            font-size: 16px;
+            padding: 16px 0 8px;
+            font-weight: 400;
+        }
+
+        .footer-note {
+            margin-top: 28px;
+            font-size: 13px;
+            color: #8e9d9d;
+            text-align: right;
+            border-top: 1px solid #ece8e3;
+            padding-top: 20px;
+        }
+
+        .loader {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,0.2);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 0.7s linear infinite;
+            margin-right: 6px;
+            vertical-align: middle;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* адаптив */
+        @media (max-width: 540px) {
+            .container { padding: 24px 16px; }
+            .search-row { flex-direction: column; align-items: stretch; }
+            .search-button { justify-content: center; }
+            .metric-grid { grid-template-columns: 1fr; gap: 12px; }
+            .company-header { flex-direction: column; align-items: flex-start; }
+        }
+    </style>
+</head>
+<body>
+<div class="container" id="app">
+    <!-- Бренд -->
+    <div class="brand">
+        <div class="brand-icon">Б</div>
+        <div>
+            <div class="brand-text">Брусника <span>• Оценка</span></div>
+            <div class="tagline">кредитоспособность контрагентов</div>
+        </div>
+    </div>
+
+    <!-- Поиск -->
+    <div class="search-section">
+        <label class="search-label" for="innInput">Введите ИНН компании</label>
+        <div class="search-row">
+            <input type="text" id="innInput" class="search-input" placeholder="ИНН, например 7722334455" value="7722334455">
+            <button class="search-button" id="calcBtn">
+                <span id="btnText">Рассчитать</span>
+            </button>
+        </div>
+        <div class="hint">Данные из ФНС, расчёт по методике Брусники</div>
+    </div>
+
+    <!-- Результат -->
+    <div id="resultContainer">
+        <!-- сюда динамически вставляем результат -->
+    </div>
+
+    <div class="footer-note">
+        Данные актуальны на момент запроса
+    </div>
+</div>
+
+<script>
+    (function() {
+        // Получаем элементы
+        const innInput = document.getElementById('innInput');
+        const calcBtn = document.getElementById('calcBtn');
+        const btnText = document.getElementById('btnText');
+        const resultContainer = document.getElementById('resultContainer');
+
+        // Храним последний ответ для возможности повторного рендера
+        let lastData = null;
+
+        // Функция рендеринга результата
+        function renderResult(data) {
+            // data — объект, который пришёл из py (или преобразован в json)
+            if (!data) {
+                resultContainer.innerHTML = `
+                    <div class="result-card" style="background: #f8f6f3; text-align:center; padding: 32px 20px; color: #637777;">
+                        <span style="font-size: 40px; display:block; margin-bottom: 12px;">🏢</span>
+                        <div style="font-size: 18px; font-weight: 450;">Введите ИНН и нажмите «Рассчитать»</div>
+                        <div style="font-size: 14px; margin-top: 8px; color: #8e9d9d;">Пример: 7722334455</div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Деструктурируем с защитой от undefined
+            const {
+                short_name = '—',
+                inn = '—',
+                age = '—',
+                bo = 'no',
+                year = '—',
+                prepay = 'no',
+                max_debt = 0,
+                max_debt_shift = '0%',
+                cred_day = 0,
+                cred_day_shift = '0%',
+                equity = 0,
+                // дополнительные строки для форматирования (если пришли из питона)
+                max_debt_shift_text = '',
+                cred_day_shift_text = '',
+                formatted_max_debt = '',
+                formatted_equity = ''
+            } = data;
+
+            // Определяем статус-бейдж
+            let badgeClass = 'muted';
+            let badgeText = 'Нет данных';
+            let prepayText = '';
+
+            if (bo === 'no') {
+                badgeClass = 'muted';
+                badgeText = 'Отчётность отсутствует';
+            } else if (prepay === 'yes') {
+                badgeClass = 'success';
+                badgeText = 'Авансирование допускается';
+            } else if (prepay === 'no') {
+                badgeClass = 'warning';
+                badgeText = 'Авансирование не допускается';
+            }
+
+            // Форматируем числа с пробелами
+            const fmtDebt = formatted_max_debt || (max_debt ? Number(max_debt).toLocaleString('ru-RU') : '0');
+            const fmtEquity = formatted_equity || (equity ? Number(equity).toLocaleString('ru-RU') : '0');
+
+            // Доп. текст по сдвигу
+            let debtShiftDisplay = max_debt_shift_text || (max_debt_shift !== '0%' ? `(${max_debt_shift})` : '');
+            let credShiftDisplay = cred_day_shift_text || (cred_day_shift !== '0%' ? `(${cred_day_shift})` : '');
+
+            // Строка кредитного дня
+            let credDayLine = '';
+            if (bo === 'no') {
+                credDayLine = `<div class="metric-item"><span class="metric-label">Срок выполнения</span><span class="metric-value" style="font-size:16px; color:#637777;">—</span></div>`;
+            } else if (cred_day === 0) {
+                credDayLine = `<div class="metric-item"><span class="metric-label">Срок выполнения</span><span class="metric-value" style="font-size:16px; color:#7e8c8c;">не удалось определить</span></div>`;
+            } else if (cred_day > 365) {
+                credDayLine = `<div class="metric-item"><span class="metric-label">Срок выполнения</span><span class="metric-value">${cred_day} дн. <span class="metric-sub red">${credShiftDisplay || 'высокий риск'}</span></span></div>`;
+            } else {
+                credDayLine = `<div class="metric-item"><span class="metric-label">Срок выполнения</span><span class="metric-value">${cred_day} дн. <span class="metric-sub green">${credShiftDisplay || ''}</span></span></div>`;
+            }
+
+            // Блок с суммой аванса
+            let debtLine = '';
+            if (bo === 'no') {
+                debtLine = `<div class="metric-item"><span class="metric-label">Допустимый аванс</span><span class="metric-value" style="font-size:16px; color:#637777;">—</span></div>`;
+            } else if (prepay === 'no') {
+                debtLine = `<div class="metric-item"><span class="metric-label">Допустимый аванс</span><span class="metric-value" style="font-size:16px; color:#b15151;">0 ₽ <span class="metric-sub red">(отрицательная КС)</span></span></div>`;
+            } else {
+                debtLine = `<div class="metric-item"><span class="metric-label">Допустимый аванс</span><span class="metric-value">${fmtDebt} ₽ <span class="metric-sub neutral">${debtShiftDisplay}</span></span></div>`;
+            }
+
+            // Стоимость чистых активов (если есть)
+            let equityLine = '';
+            if (equity && equity !== 0) {
+                equityLine = `
+                    <div class="equity-line">
+                        <span class="equity-label">Стоимость чистых активов (для оценки взыскания)</span>
+                        <span class="equity-value">~ ${fmtEquity} ₽</span>
+                    </div>
+                `;
+            }
+
+            // Сборка HTML
+            const html = `
+                <div class="result-card">
+                    <div class="company-header">
+                        <span class="company-name">${short_name}</span>
+                        <span class="company-inn">ИНН ${inn}</span>
+                        <span class="company-age">${age} лет</span>
+                    </div>
+
+                    <div>
+                        <span class="status-badge ${badgeClass}">${badgeText}</span>
+                        ${bo !== 'no' ? `<span style="margin-left: 12px; font-size:14px; color:#4a6262;">отчётность ${year} г.</span>` : ''}
+                    </div>
+
+                    ${bo === 'no' ? `<div class="no-data-message">📄 Бухгалтерская отчётность не найдена. Расчёт невозможен.</div>` : ''}
+
+                    <div class="metric-grid">
+                        ${debtLine}
+                        ${credDayLine}
+                    </div>
+
+                    ${equityLine}
+
+                    ${bo !== 'no' && prepay === 'no' ? `<div style="margin-top: 16px; font-size: 14px; color: #8f5f2e; background: #fdf0e3; padding: 10px 16px; border-radius: 16px;">⚠️ Кредитоспособность отрицательная, авансирование не рекомендуется.</div>` : ''}
+                    ${bo !== 'no' && prepay === 'yes' && cred_day > 365 ? `<div style="margin-top: 16px; font-size: 14px; color: #a54141; background: #fce9e9; padding: 10px 16px; border-radius: 16px;">⏳ Слишком большой срок выполнения обязательств, высокие риски.</div>` : ''}
+                </div>
+            `;
+
+            resultContainer.innerHTML = html;
+        }
+
+        // Функция вызова API (наш скрипт brusnika_prepay.py)
+        async function fetchPrepayData(inn) {
+            // эмулируем запрос к бэкенду, в реальности тут должен быть вызов /api/calculate?inn=...
+            // Так как у нас нет сервера, делаем заглушку, которая возвращает данные, 
+            // но максимально приближённые к логике скрипта.
+            // В production здесь будет fetch к вашему эндпоинту.
+
+            // Имитация работы скрипта — генерируем ответ на основе ИНН (для демонстрации)
+            return new Promise((resolve) => {
+                // Небольшая задержка, как при реальном запросе
+                setTimeout(() => {
+                    // Парсим инн как число для детерминизма, но чтобы не было скучно — разные варианты
+                    const seed = inn.replace(/\D/g, '').slice(0, 4) || '1234';
+                    const numSeed = parseInt(seed, 10) || 1234;
+                    const isEven = numSeed % 2 === 0;
+                    const isLarge = numSeed > 5000;
+
+                    // Формируем ответ, максимально похожий на структуру из Python
+                    const mockData = {
+                        short_name: isEven ? 'ООО «Стройинвест»' : 'АО «Уралпром»',
+                        inn: inn,
+                        age: 8 + (numSeed % 7),
+                        bo: isLarge ? 'no' : 'yes',
+                        year: 2025,
+                        prepay: isLarge ? 'no' : (isEven ? 'yes' : 'no'),
+                        max_debt: isEven ? 1450000 : 0,
+                        max_debt_shift: isEven ? '+15.3%' : '-7.2%',
+                        cred_day: isEven ? 210 : 0,
+                        cred_day_shift: isEven ? '+4.1%' : '-12.5%',
+                        equity: isEven ? 3200000 : 0,
+                        // форматированные строки (можно передать как есть)
+                        formatted_max_debt: isEven ? '1 450 000' : '0',
+                        formatted_equity: isEven ? '3 200 000' : '0',
+                        max_debt_shift_text: isEven ? '(изменение +15.3% улучшение)' : '(изменение -7.2% ухудшение)',
+                        cred_day_shift_text: isEven ? ' (изменение +4.1% - ухудшение)' : ' (изменение -12.5% - улучшение)',
+                    };
+
+                    // Если bo === 'no', обнуляем некоторые поля
+                    if (mockData.bo === 'no') {
+                        mockData.prepay = 'no';
+                        mockData.max_debt = 0;
+                        mockData.cred_day = 0;
+                        mockData.equity = 0;
+                        mockData.formatted_max_debt = '0';
+                        mockData.formatted_equity = '0';
+                        mockData.max_debt_shift = '0%';
+                        mockData.cred_day_shift = '0%';
+                    }
+
+                    resolve(mockData);
+                }, 500);
+            });
+        }
+
+        // Обработчик клика
+        async function handleCalculate() {
+            const inn = innInput.value.trim();
+            if (!inn) {
+                resultContainer.innerHTML = `
+                    <div class="result-card" style="background: #fdf0e3; border-color: #f1daca;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span style="font-size:28px;">⚠️</span>
+                            <span style="font-weight:450; color:#7e5f3f;">Введите ИНН для расчёта</span>
+                        </div>
+                    </div>
+                `;
+                return;
+            }
+
+            // Включаем лоадер
+            btnText.innerHTML = '<span class="loader"></span> Загрузка';
+            calcBtn.disabled = true;
+
+            try {
+                const data = await fetchPrepayData(inn);
+                lastData = data;
+                renderResult(data);
+            } catch (error) {
+                console.error(error);
+                resultContainer.innerHTML = `
+                    <div class="result-card" style="background: #fce9e9; border-color: #f0cfcf;">
+                        <div style="display:flex; align-items:center; gap:12px;">
+                            <span style="font-size:28px;">❌</span>
+                            <span style="font-weight:450; color:#a54141;">Ошибка при получении данных. Проверьте ИНН.</span>
+                        </div>
+                    </div>
+                `;
+            } finally {
+                btnText.innerHTML = 'Рассчитать';
+                calcBtn.disabled = false;
+            }
+        }
+
+        // При клике
+        calcBtn.addEventListener('click', handleCalculate);
+
+        // При enter в поле ввода
+        innInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleCalculate();
+            }
+        });
+
+        // При загрузке показываем заглушку
+        renderResult(null);
+
+        // Также можно показать пример при клике на hint (доп. удобство)
+        document.querySelector('.hint')?.addEventListener('click', function() {
+            innInput.value = '7722334455';
+            handleCalculate();
+        });
+
+    })();
+</script>
+</body>
+</html>
