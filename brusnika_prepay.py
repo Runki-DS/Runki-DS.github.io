@@ -309,3 +309,46 @@ else:
     # Добавляем вывод чистых активов только если equity не равен 0
     if equity != 0:
         print(f"Стоимость чистых активов ~ {formatted_equity} ₽ (для оценки перспектив взыскания)")
+
+import argparse
+import sys
+import json
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--inn", required=True, help="ИНН компании")
+    parser.add_argument("--json", action="store_true", help="Вывод в формате JSON")
+    args = parser.parse_args()
+
+    # Переназначаем input() для автоматического ввода ИНН
+    original_input = __builtins__.input
+    def fake_input(prompt=""):
+        if "ИНН" in prompt:
+            return args.inn
+        return original_input(prompt)
+    __builtins__.input = fake_input
+
+    # Запускаем основной код (он уже написан в вашем скрипте)
+    # ВАЖНО: нужно, чтобы весь код был в глобальной области или вызывался из main()
+    # Если у вас код просто выполняется последовательно — он сработает.
+
+    # После выполнения кода у вас должна быть переменная df с результатами
+    # Мы её используем для формирования вывода
+
+    # Если нужен JSON — выводим его, иначе обычный текст
+    if args.json:
+        # Извлекаем первую строку (там все данные)
+        row = df.iloc[0].to_dict()
+        # Сериализуем с обработкой типов
+        output = {}
+        for k, v in row.items():
+            if isinstance(v, (np.int64, np.int32)):
+                output[k] = int(v)
+            elif isinstance(v, (np.float64, np.float32)):
+                output[k] = float(v)
+            else:
+                output[k] = v
+        print(json.dumps(output, ensure_ascii=False))
+    else:
+        # Оставляем стандартный вывод
+        pass
