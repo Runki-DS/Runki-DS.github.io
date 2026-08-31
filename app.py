@@ -114,7 +114,7 @@ st.markdown(f"""
     }}
     /* Карточка поиска */
     .search_form {{
-        background: {WHITE};
+        background: "#ffffff";
         border-radius: 24px;
         padding: 36px 40px;
         box-shadow: 0 12px 40px rgba(0, 0, 0, 0.04);
