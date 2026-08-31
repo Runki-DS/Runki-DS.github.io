@@ -121,7 +121,7 @@ st.markdown(f"""
         border: 1px solid {BORDER_COLOR};
         margin-bottom: 32px;
     }}
-    .search-card label {{
+    .search_form label {{
         display: block;
         font-weight: 500;
         font-size: 15px;
@@ -399,7 +399,7 @@ st.markdown("""
         <div class="logo-icon">Б</div>
         <div class="logo-text">Брусника <span>· проверка</span></div>
     </div>
-    <span class="header-tag">Оценка контрагента</span>
+    <span class="header-tag">Оценка кредитоспособности юридических лиц</span>
 </div>
 """, unsafe_allow_html=True)
 
@@ -409,7 +409,7 @@ st.markdown("""
 st.markdown("""
 <div class="hero">
     <h1>Проверка <strong>контрагента</strong></h1>
-    <p class="sub">Кредитоспособность и риск авансирования по данным ФНС</p>
+    <p class="sub">Оценка кредитоспособности по данным бухгалтерской отчетности</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -419,13 +419,13 @@ st.markdown("""
 st.markdown('<div class="search-card">', unsafe_allow_html=True)
 
 with st.form(key="search_form"):
-    st.markdown('<label>ИНН компании</label>', unsafe_allow_html=True)
+    st.markdown('<label>ИНН юридического лица</label>', unsafe_allow_html=True)
     
     col_input, col_button = st.columns([3, 1])
     with col_input:
         inn = st.text_input(
             "",
-            placeholder="Введите 10 или 12 цифр",
+            placeholder="Введите 10 цифр",
             max_chars=12,
             label_visibility="collapsed",
             key="inn_input"
