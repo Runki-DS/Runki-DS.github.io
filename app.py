@@ -339,7 +339,7 @@ if st.button("🔍 Проверить компанию", type="primary"):
                         (df.loc[0, 'eV_2110'] - df.loc[0, 'eV_2400']) -
                         df.loc[0, 'eV_1250'] +
                         df.loc[0, 'eV_1510']
-                    )) * 1000 / 12 * 0.6
+                    )) / 12 * 0.6
                 ).astype(int)
 
                 df.loc[0, 'max_debt_prev'] = (
@@ -350,7 +350,7 @@ if st.button("🔍 Проверить компанию", type="primary"):
                         (df.loc[0, 'eV_2110_prev'] - df.loc[0, 'eV_2400_prev']) -
                         df.loc[0, 'eV_1250_prev'] +
                         df.loc[0, 'eV_1510_prev']
-                    )) * 1000 / 12 * 0.6
+                    )) / 12 * 0.6
                 ).astype(int)
 
                 if df.loc[0, 'max_debt_prev'] != 0:
