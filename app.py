@@ -8,7 +8,7 @@ import numpy as np
 # 1. НАСТРОЙКА СТРАНИЦЫ
 # ----------------------------------------------------------------------------
 st.set_page_config(
-    page_title="Брусника — проверка контрагента",
+    page_title="Брусника — оценка кредитоспособности",
     page_icon="🌲",
     layout="wide",
     initial_sidebar_state="collapsed"
