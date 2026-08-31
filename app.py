@@ -416,13 +416,11 @@ st.markdown("""
 # ----------------------------------------------------------------------------
 # 4. КАРТОЧКА ПОИСКА (поле ввода и кнопка внутри белой карточки)
 # ----------------------------------------------------------------------------
-with st.container():
-    st.markdown('<div class="search-card">', unsafe_allow_html=True)
-    
-    # Теперь все элементы внутри search-card
+st.markdown('<div class="search-card">', unsafe_allow_html=True)
+
+with st.form(key="search_form"):
     st.markdown('<label>ИНН компании</label>', unsafe_allow_html=True)
     
-    # Используем columns для размещения input и button в ряд
     col_input, col_button = st.columns([3, 1])
     with col_input:
         inn = st.text_input(
@@ -433,14 +431,13 @@ with st.container():
             key="inn_input"
         )
     with col_button:
-        check_btn = st.button(
+        check_btn = st.form_submit_button(
             "Проверить",
-            key="check_btn",
             use_container_width=True,
             type="primary"
         )
-    
-    st.markdown('</div>', unsafe_allow_html=True)
+
+st.markdown('</div>', unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------------
 # 5. ЛОГИКА ПРИЛОЖЕНИЯ
