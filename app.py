@@ -418,7 +418,7 @@ st.markdown("""
 # ----------------------------------------------------------------------------
 st.markdown('<div class="search-card">', unsafe_allow_html=True)
 
-with st.form('<div class="search-card">'key="search_form"):
+with st.form('<div class="search-card">', key="search_form"):
     st.markdown('<label>ИНН компании</label>', unsafe_allow_html=True)
     
     col_input, col_button = st.columns([3, 1])
