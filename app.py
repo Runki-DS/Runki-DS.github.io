@@ -138,6 +138,10 @@ st.markdown(f"""
     .search-row .stTextInput {{
         flex: 1;
         min-width: 200px;
+        padding: 0 !important;
+    }}
+    .search-row .stTextInput > div {{
+        padding: 0 !important;
     }}
     .search-row .stTextInput > div > div > input {{
         padding: 14px 20px !important;
@@ -147,36 +151,46 @@ st.markdown(f"""
         background: #fcfcfc !important;
         font-family: inherit !important;
         height: auto !important;
+        min-height: 52px;
     }}
     .search-row .stTextInput > div > div > input:focus {{
         border-color: {GOLD} !important;
         box-shadow: 0 0 0 3px rgba(184, 155, 123, 0.15) !important;
         background: {WHITE} !important;
     }}
+    .search-row .stTextInput > div > div > input::placeholder {{
+        color: #aaa;
+    }}
     .search-row .stButton {{
         margin: 0;
+        padding: 0 !important;
     }}
     .search-row .stButton > button {{
-        padding: 14px 40px;
-        background: {DARK};
-        color: {WHITE};
-        border: none;
-        border-radius: 12px;
-        font-weight: 500;
-        font-size: 16px;
-        cursor: pointer;
-        transition: background 0.2s, transform 0.1s;
-        font-family: inherit;
-        white-space: nowrap;
-        height: auto;
-        min-height: 52px;
-        width: auto;
+        padding: 14px 40px !important;
+        background: {DARK} !important;
+        color: {WHITE} !important;
+        border: none !important;
+        border-radius: 12px !important;
+        font-weight: 500 !important;
+        font-size: 16px !important;
+        cursor: pointer !important;
+        transition: background 0.2s, transform 0.1s !important;
+        font-family: inherit !important;
+        white-space: nowrap !important;
+        height: auto !important;
+        min-height: 52px !important;
+        width: auto !important;
+        margin: 0 !important;
     }}
     .search-row .stButton > button:hover {{
-        background: #333;
+        background: #333 !important;
     }}
     .search-row .stButton > button:active {{
-        transform: scale(0.97);
+        transform: scale(0.97) !important;
+    }}
+    .search-row .stButton > button:disabled {{
+        opacity: 0.8;
+        pointer-events: none;
     }}
     /* Результаты */
     .results-card {{
@@ -310,6 +324,20 @@ st.markdown(f"""
     .footer a:hover {{
         border-bottom-color: {GOLD};
     }}
+    /* Стили для сообщений */
+    .stAlert {{
+        border-radius: 12px !important;
+        border-left: 4px solid {GOLD} !important;
+        margin-bottom: 20px !important;
+    }}
+    .stAlert > div {{
+        padding: 12px 18px !important;
+    }}
+    /* Спиннер */
+    .stSpinner {{
+        text-align: center;
+        padding: 20px 0;
+    }}
     /* Адаптив */
     @media (max-width: 640px) {{
         .search-card {{
@@ -320,8 +348,8 @@ st.markdown(f"""
             align-items: stretch;
         }}
         .search-row .stButton > button {{
-            width: 100%;
-            justify-content: center;
+            width: 100% !important;
+            justify-content: center !important;
         }}
         .results-card {{
             padding: 24px 20px;
@@ -359,14 +387,6 @@ st.markdown(f"""
             font-size: 18px;
         }}
     }}
-    /* Стили для сообщений об ошибках */
-    .stAlert {{
-        border-radius: 12px !important;
-        border-left: 4px solid {GOLD} !important;
-    }}
-    .stAlert > div {{
-        padding: 12px 18px !important;
-    }}
 </style>
 """, unsafe_allow_html=True)
 
@@ -394,12 +414,13 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ----------------------------------------------------------------------------
-# 4. КАРТОЧКА ПОИСКА (с Streamlit виджетами)
+# 4. КАРТОЧКА ПОИСКА (поле ввода и кнопка внутри белой карточки)
 # ----------------------------------------------------------------------------
 with st.container():
     st.markdown('<div class="search-card">', unsafe_allow_html=True)
-    st.markdown('<label for="innInput">ИНН компании</label>', unsafe_allow_html=True)
+    st.markdown('<label>ИНН компании</label>', unsafe_allow_html=True)
     
+    # Используем columns для размещения input и button в ряд
     col_input, col_button = st.columns([3, 1])
     with col_input:
         inn = st.text_input(
@@ -410,7 +431,12 @@ with st.container():
             key="inn_input"
         )
     with col_button:
-        check_btn = st.button("Проверить", key="check_btn", use_container_width=True)
+        check_btn = st.button(
+            "Проверить",
+            key="check_btn",
+            use_container_width=True,
+            type="primary"
+        )
     
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -423,6 +449,8 @@ if 'result' not in st.session_state:
     st.session_state.result = None
 if 'error' not in st.session_state:
     st.session_state.error = None
+if 'is_loading' not in st.session_state:
+    st.session_state.is_loading = False
 
 def check_counterparty(inn):
     """Основная функция проверки контрагента"""
@@ -440,6 +468,8 @@ def check_counterparty(inn):
         st.session_state.error = "⚠️ API ключ не настроен. Добавьте FOCUS_API_KEY в secrets."
         st.session_state.result = None
         return
+    
+    st.session_state.is_loading = True
     
     try:
         NDS = 22
@@ -465,6 +495,7 @@ def check_counterparty(inn):
         if req_response.status_code != 200:
             st.session_state.error = f"❌ Ошибка API: {req_response.status_code}"
             st.session_state.result = None
+            st.session_state.is_loading = False
             return
             
         req_data = req_response.json()
@@ -477,6 +508,7 @@ def check_counterparty(inn):
         else:
             st.session_state.error = "❌ Компания не найдена по указанному ИНН"
             st.session_state.result = None
+            st.session_state.is_loading = False
             return
 
         # Получаем данные по /api3/accountingReports
@@ -498,6 +530,7 @@ def check_counterparty(inn):
             df[['max_debt_shift', 'cred_day_shift']] = '0%'
             st.session_state.result = df
             st.session_state.error = None
+            st.session_state.is_loading = False
             return
 
         # Определяем последний и предпоследний годы
@@ -651,6 +684,8 @@ def check_counterparty(inn):
     except Exception as e:
         st.session_state.error = f"❌ Произошла ошибка: {str(e)}"
         st.session_state.result = None
+    finally:
+        st.session_state.is_loading = False
 
 # Выполняем проверку при нажатии кнопки
 if check_btn:
@@ -659,6 +694,11 @@ if check_btn:
 # Отображаем ошибку, если есть
 if st.session_state.error:
     st.error(st.session_state.error)
+
+# Отображаем спиннер при загрузке
+if st.session_state.is_loading:
+    with st.spinner("⏳ Отправка запроса..."):
+        st.empty()
 
 # ----------------------------------------------------------------------------
 # 6. ОТОБРАЖЕНИЕ РЕЗУЛЬТАТОВ
