@@ -418,6 +418,8 @@ st.markdown("""
 # ----------------------------------------------------------------------------
 with st.container():
     st.markdown('<div class="search-card">', unsafe_allow_html=True)
+    
+    # Теперь все элементы внутри search-card
     st.markdown('<label>ИНН компании</label>', unsafe_allow_html=True)
     
     # Используем columns для размещения input и button в ряд
